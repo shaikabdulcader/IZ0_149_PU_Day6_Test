@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SQL Small Test — Days 1 to 6</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+:root{--bg:#eef2f6;--card:#fff;--ink:#16202e;--mut:#5b6878;--line:#d5dce5;--ac:#0b7a75;--gold:#b8860b;--ok:#1d8a4e;--code:#0f1b2b;--ci:#d7f3ee;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1521;--card:#152234;--ink:#e6edf5;--mut:#93a3b7;--line:#263a52;--ac:#3cc9bd;--gold:#f0c24b;--ok:#4cc27f;--code:#08111c}}
+:root[data-theme="dark"]{--bg:#0d1521;--card:#152234;--ink:#e6edf5;--mut:#93a3b7;--line:#263a52;--ac:#3cc9bd;--gold:#f0c24b;--ok:#4cc27f;--code:#08111c}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Bricolage Grotesque",system-ui,sans-serif}
+main{max-width:820px;margin:0 auto;padding:16px}h1{font-size:clamp(26px,5vw,36px);font-weight:800;line-height:1.15;margin:10px 0 4px}
+.sub{color:var(--mut);margin:0 0 12px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:16px 0}
+h2{font-size:20px;margin:0 0 6px}.tag{display:inline-block;background:color-mix(in srgb,var(--ac) 16%,transparent);color:var(--ac);border-radius:99px;padding:1px 10px;font-weight:700;font-size:13px;margin-right:6px}
+code,pre,textarea{font-family:"IBM Plex Mono",ui-monospace,monospace}code{background:color-mix(in srgb,var(--ac) 14%,transparent);padding:1px 5px;border-radius:5px;font-size:14px}
+table{border-collapse:collapse;font-size:14px;margin:6px 0}th,td{border:1px solid var(--line);padding:4px 10px;text-align:left}th{background:color-mix(in srgb,var(--ac) 14%,transparent)}
+ol.req{padding-left:20px;margin:6px 0}textarea{width:100%;min-height:96px;background:var(--code);color:var(--ci);border:0;border-radius:10px;padding:12px;font-size:14px;margin-top:6px}
+button{font:700 14px inherit;font-family:inherit;border-radius:8px;padding:7px 14px;cursor:pointer;margin:6px 6px 0 0}
+.b{background:var(--ac);color:#fff;border:0}.g{background:none;border:1.5px solid var(--line);color:var(--ink)}.g.on{border-color:var(--ok);color:var(--ok)}
+button:focus-visible,textarea:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.ans{display:none;margin-top:10px;border:2px dashed var(--ac);border-radius:12px;padding:12px}.ans.show{display:block}
+pre{background:var(--code);color:var(--ci);border-radius:10px;padding:12px 14px;font-size:14px;overflow-x:auto;margin:6px 0;white-space:pre-wrap}
+.why{color:var(--mut);font-size:15px;margin:6px 0 0}.top{display:flex;flex-wrap:wrap;gap:8px;align-items:center}#sc{font-weight:800;color:var(--gold);margin-left:auto}
+</style></head><body><main>
+<h1>SQL Small Test — Days 1 to 6</h1>
+<p class="sub">6 query-writing questions · Basic to intermediate · Write your query first, then reveal the answer to check.</p>
+
+<div class="card"><h2>Tables used in this test</h2>
+<p><b>employees</b> — <code>employee_id</code>, <code>first_name</code>, <code>last_name</code>, <code>job_id</code>, <code>salary</code>, <code>commission_pct</code>, <code>hire_date</code>, <code>department_id</code></p>
+<p><b>departments</b> — <code>department_id</code>, <code>department_name</code></p>
+<p class="sub" style="margin:0">Instructions: use Oracle SQL. End each query with a semicolon. Use exactly the column headings (aliases) given in each question.</p>
+<div class="top"><button class="g" id="ra">Reveal all answers</button><button class="g" id="ha">Hide all answers</button><span id="sc">Self-score: 0 / 6</span></div></div>
+
+<div id="qs"></div>
+</main>
+<script>
+const Q=[
+{d:'Day 1',t:'SELECT, aliases, literals, concatenation, q\'\' and DISTINCT',
+q:'From the <code>employees</code> table, display each different <code>job_id</code> only once. Join each job_id to the text <code> - employee\'s job</code> and name the column <code>"Job List"</code>. Write the text using the alternative quote operator <code>q\'[ ]\'</code>.',
+a:'SELECT DISTINCT job_id || q\'[ - employee\'s job]\' AS "Job List"\nFROM   employees;',
+w:'DISTINCT removes repeated job_ids. || joins the column and the text literal. q\'[ ]\' lets the apostrophe in employee\'s appear without doubling it. AS gives the column heading.'},
+{d:'Day 2',t:'Expressions, WHERE, IN, BETWEEN, LIKE, IS NULL, substitution variable',
+q:'<b>Part A.</b> Display <code>first_name</code>, <code>salary</code> and yearly pay (<code>salary</code> multiplied by 12, heading <code>"Annual Salary"</code>) for employees who: work in department 50 or 80, earn between 5000 and 10000 (both included), have a first_name starting with the letter S, and have no commission (<code>commission_pct</code> is NULL).<br><b>Part B.</b> Change the query so the department number is entered by the user when the query runs, instead of using 50 or 80.',
+a:'-- Part A\nSELECT first_name, salary, salary * 12 AS "Annual Salary"\nFROM   employees\nWHERE  department_id IN (50, 80)\nAND    salary BETWEEN 5000 AND 10000\nAND    first_name LIKE \'S%\'\nAND    commission_pct IS NULL;\n\n-- Part B\nSELECT first_name, salary, salary * 12 AS "Annual Salary"\nFROM   employees\nWHERE  department_id = &dept_id\nAND    salary BETWEEN 5000 AND 10000\nAND    first_name LIKE \'S%\'\nAND    commission_pct IS NULL;',
+w:'NULL can only be tested with IS NULL (never = NULL). BETWEEN includes both limits. % in LIKE means any number of characters. &dept_id asks for a value each time the query runs.'},
+{d:'Day 3',t:'Character functions, ORDER BY, FETCH FIRST',
+q:'Display the <code>last_name</code> in capital letters (heading <code>"Last Name"</code>) and the first 3 characters of <code>first_name</code> (heading <code>"Short Name"</code>). Show only the 5 employees with the highest salary, highest salary first.',
+a:'SELECT UPPER(last_name)        AS "Last Name",\n       SUBSTR(first_name, 1, 3) AS "Short Name"\nFROM   employees\nORDER BY salary DESC\nFETCH FIRST 5 ROWS ONLY;',
+w:'UPPER changes case. SUBSTR(text, start, length) cuts out part of a string. ORDER BY ... DESC puts the biggest values first and FETCH FIRST n ROWS ONLY keeps only the top n after sorting.'},
+{d:'Day 4',t:'Number functions, date functions, EXTRACT',
+q:'Display <code>last_name</code>; daily pay (<code>salary</code> divided by 30, rounded to 2 decimal places, heading <code>"Daily Pay"</code>); the number of months between the hire date and today, rounded to a whole number (heading <code>"Months Worked"</code>); and the date 6 months after the hire date (heading <code>"Review Date"</code>). Show only employees hired in the year 2020 or later.',
+a:'SELECT last_name,\n       ROUND(salary / 30, 2)                    AS "Daily Pay",\n       ROUND(MONTHS_BETWEEN(SYSDATE, hire_date)) AS "Months Worked",\n       ADD_MONTHS(hire_date, 6)                  AS "Review Date"\nFROM   employees\nWHERE  EXTRACT(YEAR FROM hire_date) >= 2020;',
+w:'ROUND(number, 2) keeps 2 decimals. MONTHS_BETWEEN(later, earlier) gives months. SYSDATE is today\'s date and time. ADD_MONTHS moves a date forward. EXTRACT(YEAR FROM date) returns just the year.'},
+{d:'Day 5',t:'TO_CHAR, NVL and CASE',
+q:'Display <code>last_name</code>; the hire date shown like <code>15-Jan-2022</code> (heading <code>"Joined On"</code>); the <code>commission_pct</code> with NULL shown as 0 (heading <code>"Commission"</code>); and a column <code>"Grade"</code> that shows <code>High</code> when salary is 10000 or more, <code>Medium</code> when salary is 5000 or more, and <code>Low</code> otherwise.',
+a:'SELECT last_name,\n       TO_CHAR(hire_date, \'DD-Mon-YYYY\') AS "Joined On",\n       NVL(commission_pct, 0)            AS "Commission",\n       CASE\n         WHEN salary >= 10000 THEN \'High\'\n         WHEN salary >= 5000  THEN \'Medium\'\n         ELSE \'Low\'\n       END AS "Grade"\nFROM   employees;',
+w:'TO_CHAR with a format model controls how a date looks. NVL(value, replacement) replaces NULL. CASE checks conditions from top to bottom and returns the first match; ELSE covers everything left.'},
+{d:'Day 6',t:'GROUP BY, HAVING, aggregate functions, MINUS',
+q:'<b>Part A.</b> For each <code>department_id</code>, display the number of employees (heading <code>"Employees"</code>) and the average salary rounded to 2 decimals (heading <code>"Avg Salary"</code>). Show only departments that have more than 3 employees.<br><b>Part B.</b> Display the department_ids that exist in <code>departments</code> but have no employees in <code>employees</code>.',
+a:'-- Part A\nSELECT department_id,\n       COUNT(*)                AS "Employees",\n       ROUND(AVG(salary), 2)   AS "Avg Salary"\nFROM   employees\nGROUP BY department_id\nHAVING COUNT(*) > 3;\n\n-- Part B\nSELECT department_id FROM departments\nMINUS\nSELECT department_id FROM employees;',
+w:'GROUP BY makes one result row per department. HAVING filters those groups (WHERE cannot use COUNT). MINUS returns rows from the first query that are not in the second, with duplicates removed.'}];
+const sc=new Set(),box=$=>document.querySelector($);
+Q.forEach((x,i)=>{const c=document.createElement('div');c.className='card';
+c.innerHTML=`<h2><span class="tag">Q${i+1}</span><span class="tag">${x.d}</span></h2><p class="sub" style="margin:0 0 6px">${x.t}</p><p>${x.q}</p>
+<textarea spellcheck="false" aria-label="Your answer for question ${i+1}" placeholder="Type your query here…"></textarea>
+<button class="b rv" aria-expanded="false">Show answer</button><button class="g sf">I got it right</button>
+<div class="ans"><b>Correct answer</b><pre></pre><p class="why"><b>Why it works:</b> ${x.w}</p></div>`;
+c.querySelector('pre').textContent=x.a;const a=c.querySelector('.ans'),r=c.querySelector('.rv');
+r.onclick=()=>{const s=a.classList.toggle('show');r.textContent=s?'Hide answer':'Show answer';r.setAttribute('aria-expanded',s)};
+c.querySelector('.sf').onclick=e=>{const on=e.target.classList.toggle('on');on?sc.add(i):sc.delete(i);box('#sc').textContent='Self-score: '+sc.size+' / 6'};
+box('#qs').append(c)});
+const all=s=>document.querySelectorAll('.ans').forEach(a=>{a.classList.toggle('show',s);a.parentNode.querySelector('.rv').textContent=s?'Hide answer':'Show answer'});
+box('#ra').onclick=()=>all(true);box('#ha').onclick=()=>all(false);
+</script></body></html>
